@@ -20,15 +20,17 @@ function BasicExamples() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <VegaLite spec={spec} data={barData} style={{ width: 400 }} />
+        <VegaLite spec={spec} data={barData} style={{ width: "95%" }} />
         {/* <div>{JSON.stringify(cars)}</div> */}
         {cars && (
           <div>
+            <p>example of width and height based on container</p>
             <VegaLite
               spec={spec2}
               data={{
                 table: cars,
               }}
+              style={{ width: "500px", height: "60px" }}
             />
             <VegaLite
               spec={spec3Detail}
@@ -38,6 +40,18 @@ function BasicExamples() {
             />
             <VegaLite
               spec={spec4line}
+              data={{
+                table: cars,
+              }}
+            />
+            <VegaLite
+              spec={spec5}
+              data={{
+                table: cars,
+              }}
+            />
+            <VegaLite
+              spec={spec6}
               data={{
                 table: cars,
               }}
@@ -105,6 +119,8 @@ const barData = {
 };
 
 const spec2 = {
+  width: "container",
+  height: "container",
   mark: {
     type: "bar",
   },
@@ -140,8 +156,6 @@ const spec2 = {
       encodings: ["x"],
     },
   },
-  width: 400,
-  height: 50,
 };
 
 const spec3Detail = {
@@ -181,4 +195,54 @@ const spec4line = {
   },
 };
 
+const spec5 = {
+  mark: { type: "point" },
+  data: { name: "table" },
+  encoding: {
+    x: { field: "Horsepower", type: "quantitative" },
+    y: { field: "Miles_per_Gallon", type: "quantitative" },
+    color: { field: "Origin", type: "nominal" },
+    tooltip: [
+      { field: "Name", type: "nominal" },
+      { field: "Origin", type: "nominal" },
+    ],
+  },
+};
+
+const spec6 = {
+  vconcat: [
+    {
+      mark: { type: "bar" },
+      data: { name: "table" },
+      encoding: {
+        x: {
+          field: "Year",
+          type: "ordinal",
+          timeUnit: "year",
+          axis: { title: null, labelAngle: 0 },
+        },
+        y: { type: "quantitative", aggregate: "count", title: null },
+        opacity: {
+          condition: { test: { selection: "sel3" }, value: 0.9 },
+          value: 0.1,
+        },
+      },
+      selection: { sel3: { type: "interval", encodings: ["x"] } },
+      width: 400,
+      height: 50,
+    },
+    {
+      mark: { type: "point" },
+      data: { name: "table" },
+      encoding: {
+        x: { field: "Horsepower", type: "quantitative" },
+        y: { field: "Miles_per_Gallon", type: "quantitative" },
+        opacity: {
+          condition: { test: { selection: "sel3" }, value: 0.9 },
+          value: 0.1,
+        },
+      },
+    },
+  ],
+};
 export default BasicExamples;
